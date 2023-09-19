@@ -15,6 +15,10 @@ public class GetIPAddress : MonoBehaviour
         GetLocalIPAddress();
     }
 
+    public void GetIP(){
+        GetLocalIPAddress();
+    }
+
     public string GetLocalIPAddress()
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
