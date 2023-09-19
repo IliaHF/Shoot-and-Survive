@@ -5,7 +5,7 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
-    private float speed = 15;
+    private float speed = 4;
 
     private void HandleMovement()
     {
