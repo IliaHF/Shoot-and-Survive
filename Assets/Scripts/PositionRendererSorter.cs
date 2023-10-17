@@ -8,11 +8,11 @@ public class PositionRendererSorter : MonoBehaviour
     private int sortingOrderBase = 5000;
     [SerializeField]
     private int offset = 0;
-    [SerializeField]
-    private bool runOnlyOnce = false;
-
-    private float timer;
     private SpriteRenderer myRenderer;
+
+    [SerializeField]
+    private bool RunOnce = true;
+    
 
     void Awake()
     {
@@ -22,5 +22,7 @@ public class PositionRendererSorter : MonoBehaviour
     void LateUpdate()
     {
         myRenderer.sortingOrder = (int)(sortingOrderBase - transform.position.y - offset);
+        if(RunOnce)
+            Destroy(this);
     }
 }

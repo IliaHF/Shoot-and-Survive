@@ -6,9 +6,12 @@ using Mirror;
 public class Player : NetworkBehaviour
 {
     private float speed = 4;
-    private Vector3 lastPos;
+    public Vector3 lastPos;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private Rigidbody2D rb;
+
+    public bool running;
 
     private void Start(){
         if(isLocalPlayer)
@@ -18,6 +21,8 @@ public class Player : NetworkBehaviour
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(RunAnimation());
     }
 
     private void HandleMovement()
@@ -26,8 +31,10 @@ public class Player : NetworkBehaviour
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
-            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0) * Time.deltaTime * speed;
-            transform.position = transform.position + movement;
+            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0) * speed;
+            // transform.position = transform.position + movement * Time.deltaTime;
+            rb.velocity = new Vector2(movement.x, movement.y);
+            // rb.MovePosition(transform.position + movement * Time.fixedDeltaTime);
         }
     }
 
@@ -35,17 +42,7 @@ public class Player : NetworkBehaviour
     {
         HandleMovement();
 
-        
-        if(transform.position != lastPos)
-        {
-            animator.SetBool("Running", true);
-        }
-        else
-        {
-            animator.SetBool("Running", false);
-        }
 
-        lastPos = transform.position;
 
 
         var mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
@@ -54,6 +51,25 @@ public class Player : NetworkBehaviour
             spriteRenderer.flipX = true;
         } else {
             spriteRenderer.flipX = false;
+        }
+    }
+
+    IEnumerator RunAnimation() {
+        while(true) {
+            yield return new WaitForSeconds(0.05f);
+
+            if(transform.position != lastPos)
+            {
+                animator.SetBool("Running", true);
+                running = true;
+            }
+            else
+            {
+                animator.SetBool("Running", false);
+                running = false;
+            }
+
+            lastPos = transform.position;
         }
     }
 }
