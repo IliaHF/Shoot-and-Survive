@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+    public GameNetworkManager gameNetworkManager;
+    public CameraManager cameraManager;
+
+    void Start() {
+        Instance = this;
+    }
     
     void Update()
     {
@@ -11,6 +18,10 @@ public class GameManager : MonoBehaviour
         {
             QuitApplication();
         }
+    }
+
+    public void StartGame(){
+        cameraManager.SetupCamera();
     }
 
     private void QuitApplication()
