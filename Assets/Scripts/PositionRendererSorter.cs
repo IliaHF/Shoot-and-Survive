@@ -7,8 +7,9 @@ public class PositionRendererSorter : MonoBehaviour
     [SerializeField]
     private int sortingOrderBase = 5000;
     [SerializeField]
-    private int offset = 0;
-    private SpriteRenderer myRenderer;
+    private float offset = 0;
+    [SerializeField]
+    private SpriteRenderer[] myRenderer;
 
     [SerializeField]
     private bool RunOnce = true;
@@ -16,12 +17,20 @@ public class PositionRendererSorter : MonoBehaviour
 
     void Awake()
     {
-        myRenderer = gameObject.GetComponent<SpriteRenderer>();
+        if(myRenderer.Length == 0)
+        {
+            myRenderer = new SpriteRenderer[1];
+            myRenderer[0] = gameObject.GetComponent<SpriteRenderer>();
+
+        }
     }
 
     void LateUpdate()
     {
-        myRenderer.sortingOrder = (int)(sortingOrderBase - transform.position.y - offset);
+        foreach(SpriteRenderer renderer in myRenderer)
+        {
+            renderer.sortingOrder = (int)(sortingOrderBase - transform.position.y - offset);
+        }
         if(RunOnce)
             Destroy(this);
     }

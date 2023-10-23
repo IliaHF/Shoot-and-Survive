@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public int id;
    
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
+        Player player = collision.gameObject.GetComponent<Player>();
+        if(player && player.id == id){
+            return;
+        }
         Destroy(gameObject);
-
     }
 }

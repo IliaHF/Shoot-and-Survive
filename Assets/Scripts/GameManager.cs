@@ -7,8 +7,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameNetworkManager gameNetworkManager;
     public CameraManager cameraManager;
+    public UIManager uiManager;
 
-    void Start() {
+    void Awake() {
         Instance = this;
     }
     
@@ -22,6 +23,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(){
         cameraManager.SetupCamera();
+        uiManager.Connected();
+    }
+
+    public void GameOver() {
+        uiManager.GameOver();
+        cameraManager.DisconnectCamera();
+        gameNetworkManager.Disconnect();
     }
 
     private void QuitApplication()

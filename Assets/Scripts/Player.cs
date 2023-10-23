@@ -5,10 +5,13 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
+    public int id;
     private float speed = 4;
     public Vector3 lastPos;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private SpriteRenderer gunSpritRenderer;
     private Rigidbody2D rb;
 
     public bool running;
@@ -41,16 +44,18 @@ public class Player : NetworkBehaviour
     void Update()
     {
         HandleMovement();
+        FlipPlayer();
+    }
 
-
-
-
+    private void FlipPlayer(){
         var mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
         var playerScreenPoint = Camera.main.WorldToScreenPoint(transform.position);
         if(mouse.x < playerScreenPoint.x) {
             spriteRenderer.flipX = true;
+            gunSpritRenderer.flipY = true;
         } else {
             spriteRenderer.flipX = false;
+            gunSpritRenderer.flipY = false;
         }
     }
 

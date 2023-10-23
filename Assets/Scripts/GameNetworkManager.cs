@@ -3,26 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class GameNetworkManager : MonoBehaviour
+public class GameNetworkManager : NetworkManager
 {
     public static GameNetworkManager Instance;
-    NetworkManager networkManager;
     public GameObject localPlayer;
+    public string defaultIP;
 
-    private void Start()
+    public bool connecting;
+
+    private void Awake()
     {
-        networkManager = gameObject.GetComponent<NetworkManager>();
         Instance = this;
+        networkAddress = defaultIP;
+    }
+
+    public void ChangeIP(string ip) {
+        networkAddress = ip;
+    }
+
+    public void Disconnect() {
+        StopClient();
+        StopServer();
+        GameManager.Instance.uiManager.ServerMenu.SetActive(false);
     }
 
     public void HostServer()
     {
-        networkManager.StartHost();
+        StartHost();
+        GameManager.Instance.uiManager.ServerMenu.SetActive(true);
     }
 
     public void ConnectToServer()
     {
-        networkManager.StartClient();
+        StartClient();
     }
 
     public void SetPlayer() {
@@ -42,5 +55,10 @@ public class GameNetworkManager : MonoBehaviour
     public void HostAndConnectToServer()
     {
         
+    }
+
+    public override void OnStopClient ()
+    {
+        GameManager.Instance.uiManager.CancelConnection();
     }
 }

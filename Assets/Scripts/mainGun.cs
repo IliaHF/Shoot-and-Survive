@@ -7,12 +7,12 @@ public class mainGun : MonoBehaviour
 {
     
     public Transform shootPoint;
-
     public float bulletSpeed;
-
     public GameObject bulltet;
+    public float bulletLifeTime = 1.0f;
 
-    public float bulletLifeTime = 1.0f ;
+    [SerializeField]
+    private Player player;
 
     // Update is called once per frame
     void Update()
@@ -28,6 +28,7 @@ public class mainGun : MonoBehaviour
         GameObject newBullet = Instantiate(bulltet, shootPoint.position, Quaternion.Euler(180, 180, shootPoint.eulerAngles.z));
 
         Rigidbody2D bulltetRb = newBullet.GetComponent<Rigidbody2D>();
+        newBullet.GetComponent<Bullet>().id = player.id;
 
         bulltetRb.AddForce(-newBullet.transform.right * bulletSpeed, ForceMode2D.Impulse);
 

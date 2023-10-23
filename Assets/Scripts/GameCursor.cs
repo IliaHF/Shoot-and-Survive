@@ -17,9 +17,7 @@ public class GameCursor : MonoBehaviour
         worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
         worldCursorTransform.position = worldPosition;
 
-        Cursor.visible = false; 
+        Cursor.visible = false;
         transform.position = mousePos;
-
-        
     }
 }

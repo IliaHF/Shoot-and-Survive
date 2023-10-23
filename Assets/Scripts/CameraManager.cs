@@ -10,6 +10,10 @@ public class CameraManager : MonoBehaviour
         GameObject localPlayer = GameNetworkManager.Instance.localPlayer;
         cameraFollowTransform.position = localPlayer.transform.position;
         cameraFollowTransform.parent = localPlayer.transform;
-        Debug.Log("SetupCamera");
+    }
+
+    public void DisconnectCamera() {
+        cameraFollowTransform.position = Vector3.zero;
+        cameraFollowTransform.parent = null;
     }
 }
