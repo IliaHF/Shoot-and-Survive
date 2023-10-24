@@ -29,7 +29,15 @@ public class HealthController : MonoBehaviour
 
     public UnityEvent OnDamage;
 
-
+    private Player player;
+    void Start() {
+        player = gameObject.GetComponent<Player>();
+    }
+    private void GameOver() {
+        if(player.isLocalPlayer) {
+            GameManager.Instance.GameOver();
+        }
+    }
 
     
     
@@ -59,6 +67,7 @@ public class HealthController : MonoBehaviour
         if(currentHealth == 0)
         {
             OnDied.Invoke();
+            GameOver();
         }
         else
         {
