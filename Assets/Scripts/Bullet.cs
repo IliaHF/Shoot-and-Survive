@@ -11,24 +11,18 @@ public class Bullet : MonoBehaviour
    
     void OnTriggerEnter2D(Collider2D collision)
     {
-        /*Player player = collision.gameObject.GetComponent<Player>();
-        if(player && player.id == id){
-            return;
-        }*/
-
-
-        if(collision.gameObject.GetComponent<Player>())
-        {
-            var HealthController = collision.gameObject.GetComponent<HealthController>();
-
-            HealthController.TakeDamage(damageAmount);
+        Player player = collision.gameObject.GetComponent<Player>();
+        if(player) {
+            if (player.id == id)
+                return;
+            if(player.isServer){
+                var HealthController = collision.gameObject.GetComponent<HealthController>();
+                HealthController.TakeDamage(damageAmount);
+            }
         }
+
         Destroy(gameObject);
     }
-
-
-
-
 
 }
 

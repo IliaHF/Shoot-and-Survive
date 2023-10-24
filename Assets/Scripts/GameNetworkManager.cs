@@ -10,6 +10,8 @@ public class GameNetworkManager : NetworkManager
     public string defaultIP;
 
     public bool connecting;
+    public int NewPlayerID;
+
 
     private void Awake()
     {
@@ -29,6 +31,7 @@ public class GameNetworkManager : NetworkManager
 
     public void HostServer()
     {
+        // StartServer();
         StartHost();
         GameManager.Instance.uiManager.ServerMenu.SetActive(true);
     }
@@ -58,6 +61,10 @@ public class GameNetworkManager : NetworkManager
     }
 
     public override void OnStopClient ()
+    {
+        GameManager.Instance.uiManager.CancelConnection();
+    }
+    public override void OnClientDisconnect ()
     {
         GameManager.Instance.uiManager.CancelConnection();
     }

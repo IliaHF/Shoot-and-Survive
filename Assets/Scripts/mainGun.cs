@@ -25,7 +25,7 @@ public class mainGun : NetworkBehaviour
     }
 
     private void CallShoot() {
-        if(!player.isLocalPlayer)
+        if(!player.isLocalPlayer || player.isLocalPlayer && player.isServer)
             return;
 
         player.Shoot();

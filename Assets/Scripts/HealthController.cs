@@ -5,13 +5,10 @@ using UnityEngine.Events;
 
 public class HealthController : MonoBehaviour
 {
-
     [SerializeField]
     private float currentHealth;
-
     [SerializeField]
     private float maximumHealth;
-
 
     public float RemainingHealthPercentage
     {
@@ -21,88 +18,76 @@ public class HealthController : MonoBehaviour
         }
     }
 
-
     public bool IsInvincible {get; set; }
-
-    public UnityEvent OnDied;
-
-
-    public UnityEvent OnDamage;
-
-
     public UnityEvent OnHealthChanged;
-
-
     private Player player;
-    void Start() {
+
+    void Awake() {
         player = gameObject.GetComponent<Player>();
-    }
-    private void GameOver() {
-        if(player.isLocalPlayer) {
-            GameManager.Instance.GameOver();
-        }
+        if(player.isLocalPlayer)
+            OnChangeHealth();
     }
 
-    
-    
+    void Start() {
+        // if(!player.isLocalPlayer)
+        //     CheckHealth();
+    }
+
+    void Update() {
+        if(!player.isServer)
+            CheckHealth();
+    }
+
+    private void GameOver() {
+        if(player.isLocalPlayer)
+            GameManager.Instance.GameOver();
+    }
+
     public void TakeDamage(float damageAmount)
     {
-
         if(currentHealth == 0)
-        {
             return;
-        }  
 
         if(IsInvincible)
-        {
             return;
-        }
 
         currentHealth -= damageAmount;
+        OnChangeHealth();
 
-        OnHealthChanged.Invoke();
-
-
-
-        if(currentHealth < 0)
-        {
-            currentHealth = 0;
-        }
-
-
-        if(currentHealth == 0)
-        {
-            OnDied.Invoke();
+        if(currentHealth <= 0)
             GameOver();
-        }
-        else
-        {
-            OnDamage.Invoke();
-
+        else{
+            // OnDamage
         }
     }
-
 
     public void AddHealth(float amountToAdd)
     {
         if(currentHealth == maximumHealth)
-        {
-
-
             return;
-        }
-
-
 
         currentHealth += amountToAdd;
-
-        OnHealthChanged.Invoke();
+        OnChangeHealth();
 
         if(currentHealth > maximumHealth)
-        {
             currentHealth = maximumHealth;
-        }
     }
 
+    public void OnChangeHealth() {
+        Debug.Log("Player " + player.id + " took damage!");
+        player.OnChangeHealth(currentHealth);
+        OnHealthChanged.Invoke();
+    }
 
+    public void CheckHealth()
+    {
+        currentHealth = player.currentHealth;
+        OnHealthChanged.Invoke();
+
+        if(currentHealth <= 0)
+            GameOver();
+        else{
+            // OnDamage
+        }
+    }
 }

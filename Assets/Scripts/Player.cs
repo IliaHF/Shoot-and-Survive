@@ -5,7 +5,6 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
-    public int id;
     private float speed = 4;
     public Vector3 lastPos;
     private Animator animator;
@@ -15,18 +14,57 @@ public class Player : NetworkBehaviour
     private Rigidbody2D rb;
     [SerializeField]
     private mainGun _mainGun;
+
+    [SerializeField]
+    private SpriteRenderer PlayerSprite;
+    [SerializeField]
+    private SpriteRenderer GunSprite;
+    [SerializeField]
+    private Collider2D playerCollider;
+    [SerializeField]
+    private GameObject HealthBar;
     
 
     private void Start(){
         if(isLocalPlayer)
         {
             GameNetworkManager.Instance.SetPlayer();
+            transform.position = new Vector2(Random.Range(-22, 22), Random.Range(-22, 22));
+
+            if(isServer) {
+                PlayerSprite.enabled = false;
+                GunSprite.enabled = false;
+                playerCollider.enabled = false;
+                HealthBar.SetActive(false);
+                GameManager.Instance.cameraManager.ServerCamera();
+            }
         }
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         StartCoroutine(RunAnimation());
+        ClientJoined();
+    }
+
+    [Client]
+    private void ClientJoined() {
+        AddPlayer();
+    }
+    
+    [SyncVar]
+    public int id;
+    [Command]
+    private void AddPlayer() {
+        Debug.Log("AddPlayer");
+        GameNetworkManager.Instance.NewPlayerID++;
+        id = GameNetworkManager.Instance.NewPlayerID;
+    }
+
+    [SyncVar]
+    public float currentHealth = 100;
+    public void OnChangeHealth(float health) {
+        currentHealth = health;
     }
 
     private void HandleMovement()
