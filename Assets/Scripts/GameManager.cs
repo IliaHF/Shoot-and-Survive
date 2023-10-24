@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameNetworkManager gameNetworkManager;
     public CameraManager cameraManager;
     public UIManager uiManager;
+    public BulletManager bulletManager;
 
     void Awake() {
         Instance = this;

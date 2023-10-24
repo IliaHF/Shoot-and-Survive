@@ -11,10 +11,11 @@ public class Player : NetworkBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     [SerializeField]
-    private SpriteRenderer gunSpritRenderer;
+    private SpriteRenderer gunSpriteRenderer;
     private Rigidbody2D rb;
-
-    public bool running;
+    [SerializeField]
+    private mainGun _mainGun;
+    
 
     private void Start(){
         if(isLocalPlayer)
@@ -30,34 +31,82 @@ public class Player : NetworkBehaviour
 
     private void HandleMovement()
     {
-        if(isLocalPlayer)
-        {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0) * speed;
-            // transform.position = transform.position + movement * Time.deltaTime;
-            rb.velocity = new Vector2(movement.x, movement.y);
-            // rb.MovePosition(transform.position + movement * Time.fixedDeltaTime);
-        }
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0) * speed;
+        // transform.position = transform.position + movement * Time.deltaTime;
+        rb.velocity = new Vector2(movement.x, movement.y);
+        // rb.MovePosition(transform.position + movement * Time.fixedDeltaTime);
     }
 
     void Update()
     {
-        HandleMovement();
-        FlipPlayer();
-    }
+        if(isLocalPlayer)
+        {
+            HandleMovement();
+            FlipPlayer();
+            GunRotation();
+            if(!isServer)
+                SyncValues();
+            else
+                SendChangesToPlayer(flip, angle);
 
+            spriteRenderer.flipX = flip;
+            gunSpriteRenderer.flipY = flip;
+            gunRotation.rotation = Quaternion.Euler(0,0, angle);
+        }
+        else {
+            spriteRenderer.flipX = serverFlip;
+            gunSpriteRenderer.flipY = serverFlip;
+            gunRotation.rotation = Quaternion.Euler(0,0, serverAngle);
+        }
+        
+    }
+    private bool flip;
     private void FlipPlayer(){
+
         var mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
         var playerScreenPoint = Camera.main.WorldToScreenPoint(transform.position);
         if(mouse.x < playerScreenPoint.x) {
-            spriteRenderer.flipX = true;
-            gunSpritRenderer.flipY = true;
+            flip = true;
         } else {
-            spriteRenderer.flipX = false;
-            gunSpritRenderer.flipY = false;
+            flip = false;
         }
     }
+
+    private Vector3 mouse_pos, object_pos;
+    private float angle;
+    [SerializeField]
+    private Transform gunRotation;
+    private void GunRotation() {
+        
+        mouse_pos = Input.mousePosition;
+        object_pos = Camera.main.WorldToScreenPoint(gunRotation.position);
+
+        mouse_pos.x = mouse_pos.x - object_pos.x;
+        mouse_pos.y = mouse_pos.y - object_pos.y;
+
+        angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+    }
+
+    [Client]
+    private void SyncValues()
+    {
+        // Debug.Log(angle);
+        SendChangesToPlayer(flip, angle);
+    }
+    
+    [SyncVar]
+    private bool serverFlip;
+    [SyncVar]
+    private float serverAngle;
+    [Command(requiresAuthority = false)]
+    private void SendChangesToPlayer(bool _flip, float _angle) {
+        serverFlip = _flip;
+        // Debug.Log(_angle + " " + serverAngle);
+        serverAngle = _angle;
+    }
+
 
     IEnumerator RunAnimation() {
         while(true) {
@@ -66,15 +115,35 @@ public class Player : NetworkBehaviour
             if(transform.position != lastPos)
             {
                 animator.SetBool("Running", true);
-                running = true;
             }
             else
             {
                 animator.SetBool("Running", false);
-                running = false;
             }
 
             lastPos = transform.position;
         }
     }
+
+
+    public void Shoot() {
+        if(isServer)
+            NetworkShoot();
+        else
+            ClientNetworkShoot();
+    }
+
+    
+    [ClientRpc]
+    private void NetworkShoot() {
+        Debug.Log("NetworkShoot!");
+        _mainGun.Shoot();
+    }
+    
+    [Command]
+    private void ClientNetworkShoot() {
+        Debug.Log("ClientNetworkShoot!");
+        NetworkShoot();
+    }
+
 }

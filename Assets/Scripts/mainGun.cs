@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Mirror;
 
-public class mainGun : MonoBehaviour
+public class mainGun : NetworkBehaviour
 {
     
     public Transform shootPoint;
@@ -18,12 +19,20 @@ public class mainGun : MonoBehaviour
     void Update()
     {
         if(Input.GetButtonDown("Fire1")){
-            Shoot();
+            CallShoot();
         }
         
     }
 
-    void Shoot()
+    private void CallShoot() {
+        if(!player.isLocalPlayer)
+            return;
+
+        player.Shoot();
+
+    }
+
+    public void Shoot()
     {
         GameObject newBullet = Instantiate(bulltet, shootPoint.position, Quaternion.Euler(180, 180, shootPoint.eulerAngles.z));
 
@@ -35,4 +44,5 @@ public class mainGun : MonoBehaviour
         Destroy(newBullet, bulletLifeTime);
 
     }
+
 }
