@@ -14,11 +14,22 @@ public class UIManager : MonoBehaviour
     public GameObject MainConnectingMenu;
     public GameObject ServerMenu;
 
+    public TextMeshProUGUI[] playersScore;
+    public TextMeshProUGUI[] playersName;
+    public string playerName;
+    public TMP_InputField playerNameInput;
+
     // Start is called before the first frame update
     void Start()
     {
-        EnterMainMenu();
+        playerName = "User" + Random.Range(100, 999).ToString();
+        playerNameInput.text = playerName;
         MenuIP.text = GameNetworkManager.Instance.defaultIP;
+        EnterMainMenu();
+    }
+
+    public void ChangeName(string name) {
+        playerName = name;
     }
 
     public void EnterMainMenu() {

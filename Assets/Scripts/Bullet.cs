@@ -16,10 +16,12 @@ public class Bullet : MonoBehaviour
             if (player.id == id)
                 return;
             if(player.isServer){
+                player.lastShotID = id;
                 var HealthController = collision.gameObject.GetComponent<HealthController>();
                 HealthController.TakeDamage(damageAmount);
             }
         }
+
 
         Destroy(gameObject);
     }

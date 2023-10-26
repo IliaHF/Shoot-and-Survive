@@ -25,7 +25,7 @@ public class GameNetworkManager : NetworkManager
 
     public void Disconnect() {
         StopClient();
-        StopServer();
+        // StopServer();
         GameManager.Instance.uiManager.ServerMenu.SetActive(false);
     }
 
@@ -48,7 +48,6 @@ public class GameNetworkManager : NetworkManager
     IEnumerator SetPlayerCoroutine() {
         Debug.Log("SetPlayerCoroutine");
         yield return new WaitWhile(() => NetworkClient.localPlayer.gameObject == null);
-        Debug.Log(NetworkClient.localPlayer.gameObject);
 
         localPlayer = NetworkClient.localPlayer.gameObject;
         GameManager.Instance.StartGame();

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public CameraManager cameraManager;
     public UIManager uiManager;
     public BulletManager bulletManager;
+    public Leaderboard leaderboard;
 
     void Awake() {
         Instance = this;
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
     private void QuitApplication()
     {
         Debug.Log("quitting");
+        // if(!gameNetworkManager.localPlayer.GetComponent<Player>().isServer && !gameNetworkManager.localPlayer.GetComponent<Player>().isLocalPlayer)
+        try{GameOver();}catch{}
         Application.Quit();
     }
 }

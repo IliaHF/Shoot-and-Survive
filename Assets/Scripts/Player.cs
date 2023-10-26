@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using TMPro;
 
 public class Player : NetworkBehaviour
 {
@@ -24,41 +25,71 @@ public class Player : NetworkBehaviour
     [SerializeField]
     private GameObject HealthBar;
     
+    [SyncVar]
+    public bool ServerPlayer;
+    public TextMeshProUGUI playerName;
+    
 
     private void Start(){
         if(isLocalPlayer)
         {
             GameNetworkManager.Instance.SetPlayer();
             transform.position = new Vector2(Random.Range(-22, 22), Random.Range(-22, 22));
-
             if(isServer) {
-                PlayerSprite.enabled = false;
-                GunSprite.enabled = false;
-                playerCollider.enabled = false;
-                HealthBar.SetActive(false);
+                ServerPlayer = true;
                 GameManager.Instance.cameraManager.ServerCamera();
             }
+        }
+        if(ServerPlayer) {
+            PlayerSprite.enabled = false;
+            GunSprite.enabled = false;
+            playerCollider.enabled = false;
+            HealthBar.SetActive(false);
+        }
+        else {
+            ClientJoined();
         }
         animator = GetComponent<Animator>();
         lastPos = transform.position;
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         StartCoroutine(RunAnimation());
-        ClientJoined();
     }
 
     [Client]
     private void ClientJoined() {
-        AddPlayer();
+        AddPlayer(GameManager.Instance.uiManager.playerName);
     }
     
     [SyncVar]
     public int id;
+    [SyncVar]
+    public string name;
     [Command]
-    private void AddPlayer() {
+    private void AddPlayer(string _name) {
         Debug.Log("AddPlayer");
         GameNetworkManager.Instance.NewPlayerID++;
         id = GameNetworkManager.Instance.NewPlayerID;
+        name = _name;
+        GameManager.Instance.leaderboard.AddPlayer(id, name);
+    }
+
+    void OnDestroy() {
+        if(isServer) {
+            DisconnectPlayer();
+        }
+    }
+
+    private void DisconnectPlayer() {
+        Debug.Log("Player: player disconnected");
+        GameManager.Instance.leaderboard.RemovePlayer(id);
+        AddPointTo(lastShotID);
+    }
+
+    public int lastShotID;
+
+    private void AddPointTo(int _id) {
+        GameManager.Instance.leaderboard.AddScore(_id);
     }
 
     [SyncVar]
@@ -98,6 +129,7 @@ public class Player : NetworkBehaviour
             gunSpriteRenderer.flipY = serverFlip;
             gunRotation.rotation = Quaternion.Euler(0,0, serverAngle);
         }
+        playerName.text = name;
         
     }
     private bool flip;
