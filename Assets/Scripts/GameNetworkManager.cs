@@ -26,7 +26,6 @@ public class GameNetworkManager : NetworkManager
     public void Disconnect() {
         StopClient();
         // StopServer();
-        GameManager.Instance.uiManager.ServerMenu.SetActive(false);
     }
 
     public void HostServer()
@@ -38,6 +37,8 @@ public class GameNetworkManager : NetworkManager
 
     public void ConnectToServer()
     {
+        if (networkAddress.Trim().Length == 0)
+            networkAddress = "localhost";
         StartClient();
     }
 
@@ -56,11 +57,23 @@ public class GameNetworkManager : NetworkManager
 
     public void HostAndConnectToServer()
     {
-        
+    }
+
+    public void StopHostingServer() {
+        StopServer();
+        GameManager.Instance.uiManager.ServerMenu.SetActive(false);
+        GameManager.Instance.uiManager.EnterMainMenu();
+        GameManager.Instance.cameraManager.DisconnectCamera();
+        GameManager.Instance.uiManager.CancelConnection();
     }
 
     public override void OnStopClient ()
     {
+        if(GameManager.Instance.gameOver)
+            GameManager.Instance.uiManager.GameOver();
+        else
+            GameManager.Instance.uiManager.EnterMainMenu();
+        GameManager.Instance.cameraManager.DisconnectCamera();
         GameManager.Instance.uiManager.CancelConnection();
     }
     public override void OnClientDisconnect ()

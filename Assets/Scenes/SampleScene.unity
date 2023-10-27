@@ -7417,7 +7417,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1504991358
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7482,9 +7482,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2103799414}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: GameOver
+      - m_Target: {fileID: 416145489}
+        m_TargetAssemblyTypeName: GameNetworkManager, Assembly-CSharp
+        m_MethodName: StopHostingServer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9883,6 +9883,7 @@ MonoBehaviour:
   uiManager: {fileID: 868566301}
   bulletManager: {fileID: 1023831857}
   leaderboard: {fileID: 252067477}
+  gameOver: 0
 --- !u!4 &2103799415
 Transform:
   m_ObjectHideFlags: 0

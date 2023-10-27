@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public BulletManager bulletManager;
     public Leaderboard leaderboard;
 
+    public bool gameOver;
+
     void Awake() {
         Instance = this;
     }
@@ -29,16 +31,13 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameOver() {
-        uiManager.GameOver();
-        cameraManager.DisconnectCamera();
+        gameOver = true;
         gameNetworkManager.Disconnect();
     }
 
     private void QuitApplication()
     {
         Debug.Log("quitting");
-        // if(!gameNetworkManager.localPlayer.GetComponent<Player>().isServer && !gameNetworkManager.localPlayer.GetComponent<Player>().isLocalPlayer)
-        try{GameOver();}catch{}
         Application.Quit();
     }
 }

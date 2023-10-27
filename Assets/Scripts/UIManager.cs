@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void EnterMainMenu() {
+        GameManager.Instance.gameOver = false;
         GameOverMenu.SetActive(false);
         GameUI.SetActive(false);
         MainMenu.SetActive(true);

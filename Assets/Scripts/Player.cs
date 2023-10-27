@@ -34,10 +34,12 @@ public class Player : NetworkBehaviour
         if(isLocalPlayer)
         {
             GameNetworkManager.Instance.SetPlayer();
-            transform.position = new Vector2(Random.Range(-22, 22), Random.Range(-22, 22));
             if(isServer) {
                 ServerPlayer = true;
                 GameManager.Instance.cameraManager.ServerCamera();
+            }
+            else {
+                transform.position = new Vector2(Random.Range(-22, 22), Random.Range(-22, 22));
             }
         }
         if(ServerPlayer) {
