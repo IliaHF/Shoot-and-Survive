@@ -1869,7 +1869,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 0}
   networkAddress: localhost
-  maxConnections: 25
+  maxConnections: 26
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
@@ -1894,6 +1894,7 @@ MonoBehaviour:
   defaultIP: 
   connecting: 0
   NewPlayerID: 0
+  IPText: {fileID: 1022079119}
 --- !u!114 &416145491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1906,7 +1907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 7777
+  port: 8569
   NoDelay: 1
   SendTimeout: 5000
   ReceiveTimeout: 30000
@@ -2828,7 +2829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &641177171
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2893,7 +2894,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 260557163}
         m_TargetAssemblyTypeName: GetIPAddress, Assembly-CSharp
         m_MethodName: GetIP
         m_Mode: 1
@@ -7130,6 +7131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldCursorTransform: {fileID: 1413389245}
+  isEnabled: 0
 --- !u!114 &1481106327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7201,7 +7203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.5, y: 37}
+  m_AnchoredPosition: {x: 2.5, y: 0}
   m_SizeDelta: {x: 450, y: 355}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1492265398

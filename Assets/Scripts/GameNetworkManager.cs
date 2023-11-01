@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using TMPro;
 
 public class GameNetworkManager : NetworkManager
 {
@@ -12,6 +13,7 @@ public class GameNetworkManager : NetworkManager
     public bool connecting;
     public int NewPlayerID;
 
+    public TextMeshProUGUI IPText;
 
     private void Awake()
     {
@@ -33,6 +35,7 @@ public class GameNetworkManager : NetworkManager
         // StartServer();
         StartHost();
         GameManager.Instance.uiManager.ServerMenu.SetActive(true);
+        // IPText.text = NetworkManager.singleton.networkAddress;
     }
 
     public void ConnectToServer()
